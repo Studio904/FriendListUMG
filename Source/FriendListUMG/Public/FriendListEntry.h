@@ -4,9 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Structs/Friend.h"
 #include "FriendListEntry.generated.h"
-
-struct FFriend;
 
 /**
  * 
@@ -19,10 +18,9 @@ class FRIENDLISTUMG_API UFriendListEntry : public UObject
 
 public:
 
-	UPROPERTY(EditDefaultsOnly)
-	FFriend* FriendData;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FFriend FriendData;
 
-	UFUNCTION()
 	void SetFriendObject(const FFriend* InFriend);
 	
 };

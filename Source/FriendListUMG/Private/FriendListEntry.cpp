@@ -6,5 +6,5 @@
 
 void UFriendListEntry::SetFriendObject(const FFriend* InFriend)
 {
-	FriendData = const_cast<FFriend*>(InFriend);
+	FriendData = *InFriend;
 }
