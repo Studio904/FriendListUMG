@@ -21,6 +21,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FFriend FriendData;
 
-	void SetFriendObject(const FFriend* InFriend);
+	void SetFriendObject(const FFriend& InFriend);
 	
 };

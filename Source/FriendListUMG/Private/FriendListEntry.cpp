@@ -4,7 +4,7 @@
 #include "FriendListEntry.h"
 #include "Structs/Friend.h"
 
-void UFriendListEntry::SetFriendObject(const FFriend* InFriend)
+void UFriendListEntry::SetFriendObject(const FFriend& InFriend)
 {
-	FriendData = *InFriend;
+	FriendData = InFriend;
 }

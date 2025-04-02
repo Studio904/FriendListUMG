@@ -25,11 +25,6 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* NickName;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> ToolTipWidget;
-
-	void SetToolTipWidget(FText* Level, FText* LastTimeConected, FText* Note);
-
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject);
 	
 };
