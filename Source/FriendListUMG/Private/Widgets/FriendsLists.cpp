@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "Components/ListView.h"
 #include "ViewModel/FriendsViewModel.h"
+#include "Widgets/FriendToast.h"
 
 void UFriendsLists::NativeOnInitialized()
 {
@@ -17,8 +18,8 @@ void UFriendsLists::NativeOnInitialized()
 
 	FriendViewModel = NewObject<UFriendsViewModel>();
 	FriendViewModel->OnFriendListChanged.AddDynamic(this, &UFriendsLists::HandleOnFriendListChange);
-	FriendViewModel->SetFriendsTable(Friends.DataTable);
-	TArray<FFriend*> FriendsList = FriendViewModel->GetFriendsArray();
+	TArray<FFriend*> FriendsList =  FriendViewModel->SetFriendsTable(Friends.DataTable);
+	ArraySize = FriendsList.Num() - 1;
 
 	for (const auto Friend: FriendsList)
 	{
@@ -50,32 +51,22 @@ void UFriendsLists::AddFriendToList(const FFriend& Friend)
 }
 
 
-
-
-
 void UFriendsLists::UpdateFriendOnList(const FFriend& InFriend)
 {
 	if (InFriend.bConnected) {
-		TArray<UObject*> OfflineFriendsEntryArray = OfflineFriends->GetListItems();
-		for (int32 i = 0; UObject* OfflineFriend : OfflineFriendsEntryArray) {
-			const UFriendListEntry* CastOfflineFriend = Cast<UFriendListEntry>(OfflineFriend);
-			if (InFriend.Id == CastOfflineFriend->FriendData.Id) {
-				UObject* FriendToRemove = OfflineFriends->GetItemAt(i);
-				OfflineFriends->RemoveItem(FriendToRemove);
-			}
-		}
+		
+		ShowToast(InFriend);
 	}
-	else {
-		TArray<UObject*> OnlineFriendsEntryArray = OnlineFriends->GetListItems();
-		for (int32 i = 0; UObject* OnlineFriend : OnlineFriendsEntryArray) {
-			const UFriendListEntry* CastOnlineFriend = Cast<UFriendListEntry>(OnlineFriend);
-			if (InFriend.Id == CastOnlineFriend->FriendData.Id) {
-				UObject* FriendToRemove = OnlineFriends->GetItemAt(i);
-				OnlineFriends->RemoveItem(FriendToRemove);
-			}
-		}
+
+	OfflineFriends->ClearListItems();
+	OnlineFriends->ClearListItems();
+	TArray<FFriend*> FriendsList = FriendViewModel->SetFriendsTable(Friends.DataTable);
+	ArraySize = FriendsList.Num() - 1;
+
+	for (const auto Friend : FriendsList)
+	{
+		AddFriendToList(*Friend);
 	}
-	AddFriendToList(InFriend);
 }
 
 void UFriendsLists::ToggleOnlineFriendlist()
@@ -97,12 +88,38 @@ void UFriendsLists::TimerToUpdateFriendStatus()
 void UFriendsLists::UpdateFriendStatus()
 {
 	if (FriendViewModel) {
-		TArray<FFriend*> FriendsList = FriendViewModel->GetFriendsArray();
+		TArray<FFriend*> FriendsList = FriendViewModel->SetFriendsTable(Friends.DataTable);
 		int32 FriendListSize = FriendsList.Num()-1;
 		int32 RandomFriendIndex = FMath::RandRange(0, FriendListSize);
 		FFriend FriendAux = *FriendsList[RandomFriendIndex];
 		FriendAux.bConnected = !FriendAux.bConnected;
 
+
 		FriendViewModel->UpdateFriendList(FriendAux.Id, &FriendAux);
 	}
+}
+
+void UFriendsLists::ShowToast(const FFriend& Friend)
+{
+	if (FriendToastClass) {
+		FriendToastWidget = CreateWidget<UFriendToast>(GetWorld(), FriendToastClass);
+		
+
+		if (FriendToastWidget)
+		{
+			FriendToastWidget->NickNameText = Friend.NickName;
+			FriendToastWidget->LevelNumber = Friend.Level;
+			FriendToastWidget->AvatarImage = Friend.Image;
+			FriendToastWidget->InitToastInfo();
+			FriendToastWidget->AddToViewport();
+			FriendToastWidget->PlayAnim();
+			FTimerHandle RemoveFromViewPortHandle;
+			GetWorld()->GetTimerManager().SetTimer(RemoveFromViewPortHandle, [this]()
+				{
+					this->FriendToastWidget->RemoveFromParent();
+				}, 4.0f, false);
+		}
+
+	}
+	
 }

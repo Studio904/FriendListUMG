@@ -4,14 +4,10 @@
 #include "ViewModel/FriendsViewModel.h"
 #include "Structs/Friend.h"
 
-void UFriendsViewModel::SetFriendsTable(const UDataTable* InFriendsTable)
+TArray<FFriend*> UFriendsViewModel::SetFriendsTable(const UDataTable* InFriendsTable)
 {
 	//Holds the original Data from the Data table create in Blueprints
 	FriendsTable = const_cast<UDataTable*>(InFriendsTable);
-}
-
-TArray<FFriend*> UFriendsViewModel::GetFriendsArray()
-{
 	TArray<FFriend*> FriendsArray;
 	FriendsTable->GetAllRows<FFriend>("", FriendsArray);
 	return FriendsArray;
@@ -23,7 +19,8 @@ FFriend* UFriendsViewModel::GetFriendById(const FString FriendId)
 		return nullptr;
 	}
 
-	TArray<FFriend*> LocalFriendsArray = GetFriendsArray();
+	TArray<FFriend*> LocalFriendsArray;
+	FriendsTable->GetAllRows<FFriend>("", LocalFriendsArray);
 	for (FFriend* Friend : LocalFriendsArray) {
 		if (Friend && Friend->Id == FriendId) {
 			return Friend;

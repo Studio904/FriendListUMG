@@ -12,6 +12,7 @@ class UListView;
 class UButton;
 class UFriendsViewModel;
 struct FFriend;
+class UFriendToast;
 
 /**
  * 
@@ -27,6 +28,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Friends")
 	TSubclassOf<UFriendListEntry> FriendListEntryClass; 
+
+	UPROPERTY(EditAnywhere, Category = "Friends")
+	TSubclassOf<UFriendToast> FriendToastClass;
 
 	virtual void NativeOnInitialized() override;
 
@@ -51,6 +55,9 @@ protected:
 
 private: 
 
+	UFriendToast* FriendToastWidget;
+	int32 ArraySize;
+
 	UFUNCTION()
 	void HandleOnFriendListChange(FFriend Friend);
 
@@ -65,4 +72,7 @@ private:
 
 	UFUNCTION()
 	void UpdateFriendStatus();
+
+	UFUNCTION()
+	void ShowToast(const FFriend& Friend);
 };

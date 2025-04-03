@@ -8,6 +8,7 @@
 
 class UTextBlock;
 class UImage;
+class UWidgetAnimation;
 
 /**
  * 
@@ -27,8 +28,20 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* Level;
 
+	FText NickNameText;
+	int64 LevelNumber;
+	UTexture2D* AvatarImage;
+
 
 	UFUNCTION()
-	void InitToastInfo(UTexture2D* AvatarImage, FText& InNickName, int64& InLevel);
+	void InitToastInfo();
+
+	UFUNCTION()
+	void PlayAnim();
+
+
+private:
+	UPROPERTY(Transient, meta=(BindWidgetAnim))
+	UWidgetAnimation* FadeInAnim;
 	
 };

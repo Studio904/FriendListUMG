@@ -22,9 +22,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Data")
 	FOnFriendListChanged OnFriendListChanged;
 
-	void SetFriendsTable(const UDataTable* InFriendsTable);
-
-	TArray<FFriend*> GetFriendsArray();
+	TArray<FFriend*> SetFriendsTable(const UDataTable* InFriendsTable);
 
 	FFriend* GetFriendById(const FString FriendId);
 
