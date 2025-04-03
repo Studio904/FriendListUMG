@@ -9,6 +9,7 @@
 
 class UImage;
 class UTextBlock;
+class UHorizontalBox;
 
 /**
  * 
@@ -25,11 +26,15 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* NickName;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> ToolTipWidget;
+	UPROPERTY(meta = (BindWidget))
+	UHorizontalBox* TooltipHolder;
 
-	void SetToolTipWidget(FText* Level, FText* LastTimeConected, FText* Note);
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> FriendToolTipWidgetClass;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject);
+
+private:
+	void SetToolTipWidget(int64& Level, FText& LastTimeConected, FText& Note);
 	
 };

@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Blueprint/IUserObjectListEntry.h"
-#include "FriendRow.generated.h"
+#include "FriendToast.generated.h"
 
-class UImage;
 class UTextBlock;
+class UImage;
 
 /**
  * 
  */
 UCLASS()
-class FRIENDLISTUMG_API UFriendRow : public UUserWidget, public IUserObjectListEntry
+class FRIENDLISTUMG_API UFriendToast : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -25,6 +24,11 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* NickName;
 
-	virtual void NativeOnListItemObjectSet(UObject* ListItemObject);
+	UPROPERTY(meta=(BindWidget))
+	UTextBlock* Level;
+
+
+	UFUNCTION()
+	void InitToastInfo(UTexture2D* AvatarImage, FText& InNickName, int64& InLevel);
 	
 };

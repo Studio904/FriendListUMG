@@ -5,6 +5,24 @@
 #include "FriendListEntry.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Widgets/FriendTooltip.h"
+#include "Components/HorizontalBox.h"
+
+void UFriendRow::SetToolTipWidget(int64& Level, FText& LastTimeConected, FText& Note)
+{
+	if (FriendToolTipWidgetClass) {
+		UFriendTooltip* FrienTooltipWidget = CreateWidget<UFriendTooltip>(this, FriendToolTipWidgetClass);
+		FrienTooltipWidget->LeveNumber = Level;
+		FrienTooltipWidget->LastTimeConnectedText = LastTimeConected;
+		FrienTooltipWidget->NoteText = Note;
+		FrienTooltipWidget->InitTooltipInfo();
+
+		if (FrienTooltipWidget) {
+			TooltipHolder->SetToolTip(FrienTooltipWidget);
+		}
+
+	}
+}
 
 void UFriendRow::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
@@ -24,6 +42,10 @@ void UFriendRow::NativeOnListItemObjectSet(UObject* ListItemObject)
 		if (NickName && FriendListEntry) {
 			FText NickNameText = FriendListEntry->FriendData.NickName;
 			NickName->SetText(NickNameText);
+		}
+
+		if (FriendListEntry && TooltipHolder) {
+			SetToolTipWidget(FriendListEntry->FriendData.Level, FriendListEntry->FriendData.LastTimeConnected, FriendListEntry->FriendData.Note);
 		}
 	}
 }
