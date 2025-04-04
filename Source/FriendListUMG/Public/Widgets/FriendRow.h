@@ -10,6 +10,7 @@
 class UImage;
 class UTextBlock;
 class UHorizontalBox;
+class UBorder;
 
 /**
  * 
@@ -20,17 +21,29 @@ class FRIENDLISTUMG_API UFriendRow : public UUserWidget, public IUserObjectListE
 	GENERATED_BODY()
 
 public:
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FLinearColor OnlineColor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	FLinearColor OfflineColor;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> FriendToolTipWidgetClass;
+
+protected:
+
 	UPROPERTY(meta=(BindWidget))
 	UImage* Avatar;
 
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* NickName;
 
+	UPROPERTY(meta=(BindWidget))
+	UBorder* FriendBorder;
+
 	UPROPERTY(meta = (BindWidget))
 	UHorizontalBox* TooltipHolder;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUserWidget> FriendToolTipWidgetClass;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject);
 

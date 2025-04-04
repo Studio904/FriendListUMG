@@ -8,6 +8,7 @@
 #include "Components/ListView.h"
 #include "ViewModel/FriendsViewModel.h"
 #include "Widgets/FriendToast.h"
+#include "Logging/LogMacros.h"
 
 void UFriendsLists::NativeOnInitialized()
 {
@@ -19,7 +20,6 @@ void UFriendsLists::NativeOnInitialized()
 	FriendViewModel = NewObject<UFriendsViewModel>();
 	FriendViewModel->OnFriendListChanged.AddDynamic(this, &UFriendsLists::HandleOnFriendListChange);
 	TArray<FFriend*> FriendsList =  FriendViewModel->SetFriendsTable(Friends.DataTable);
-	ArraySize = FriendsList.Num() - 1;
 
 	for (const auto Friend: FriendsList)
 	{
@@ -53,19 +53,18 @@ void UFriendsLists::AddFriendToList(const FFriend& Friend)
 
 void UFriendsLists::UpdateFriendOnList(const FFriend& InFriend)
 {
-	if (InFriend.bConnected) {
-		
-		ShowToast(InFriend);
-	}
-
 	OfflineFriends->ClearListItems();
 	OnlineFriends->ClearListItems();
 	TArray<FFriend*> FriendsList = FriendViewModel->SetFriendsTable(Friends.DataTable);
-	ArraySize = FriendsList.Num() - 1;
 
 	for (const auto Friend : FriendsList)
 	{
+		const FFriend auxFriend = *Friend;
 		AddFriendToList(*Friend);
+	}
+
+	if (InFriend.bConnected) {
+		ShowToast(InFriend);
 	}
 }
 
@@ -90,10 +89,13 @@ void UFriendsLists::UpdateFriendStatus()
 	if (FriendViewModel) {
 		TArray<FFriend*> FriendsList = FriendViewModel->SetFriendsTable(Friends.DataTable);
 		int32 FriendListSize = FriendsList.Num()-1;
-		int32 RandomFriendIndex = FMath::RandRange(0, FriendListSize);
+		int32 RandomFriendIndex = FMath::RandRange(1, FriendListSize);
 		FFriend FriendAux = *FriendsList[RandomFriendIndex];
 		FriendAux.bConnected = !FriendAux.bConnected;
 
+		if (!FriendViewModel->OnFriendListChanged.IsBound()) {
+			FriendViewModel->OnFriendListChanged.AddDynamic(this, &UFriendsLists::HandleOnFriendListChange);
+		}
 
 		FriendViewModel->UpdateFriendList(FriendAux.Id, &FriendAux);
 	}

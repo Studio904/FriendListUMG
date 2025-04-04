@@ -7,6 +7,7 @@
 #include "Components/TextBlock.h"
 #include "Widgets/FriendTooltip.h"
 #include "Components/HorizontalBox.h"
+#include "Components/Border.h"
 
 void UFriendRow::SetToolTipWidget(int64& Level, FText& LastTimeConected, FText& Note)
 {
@@ -44,8 +45,25 @@ void UFriendRow::NativeOnListItemObjectSet(UObject* ListItemObject)
 			NickName->SetText(NickNameText);
 		}
 
+		if (FriendBorder && FriendListEntry) {
+			if (FriendListEntry->FriendData.bConnected) {
+				FriendBorder->SetBrushColor(OnlineColor);
+			}
+			else {
+				FriendBorder->SetBrushColor(OfflineColor);
+			}
+		}
+
 		if (FriendListEntry && TooltipHolder) {
-			SetToolTipWidget(FriendListEntry->FriendData.Level, FriendListEntry->FriendData.LastTimeConnected, FriendListEntry->FriendData.Note);
+			FText LastTimeConnectedText;
+			if (FriendListEntry->FriendData.bConnected) {
+				LastTimeConnectedText = FText::FromString("Connected");
+			}
+			else {
+				LastTimeConnectedText = FriendListEntry->FriendData.LastTimeConnected;
+			}
+
+			SetToolTipWidget(FriendListEntry->FriendData.Level, LastTimeConnectedText, FriendListEntry->FriendData.Note);
 		}
 	}
 }

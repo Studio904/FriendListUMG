@@ -33,10 +33,8 @@ FFriend* UFriendsViewModel::GetFriendById(const FString FriendId)
 void UFriendsViewModel::UpdateFriendList(const FString FriendId, const FFriend* InFriend)
 {
 	FFriend* OutFriend = GetFriendById(FriendId);
-
 	OutFriend->bConnected = InFriend->bConnected;
 	OutFriend->Note = InFriend->Note;
 	OutFriend->Level = InFriend->Level;
-
 	OnFriendListChanged.Broadcast(*OutFriend);
 }

@@ -26,6 +26,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(RowType="Friend"))
 	FDataTableRowHandle Friends;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(BindWidget))
+	UButton* OfflineFriendsBtn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta=(BindWidget))
+	UButton* OnlineFriendsBtn;
+
 	UPROPERTY(EditAnywhere, Category = "Friends")
 	TSubclassOf<UFriendListEntry> FriendListEntryClass; 
 
@@ -39,13 +45,7 @@ protected:
 	UListView* OfflineFriends;
 
 	UPROPERTY(meta=(BindWidget))
-	UButton* OfflineFriendsBtn;
-
-	UPROPERTY(meta=(BindWidget))
 	UListView* OnlineFriends;
-
-	UPROPERTY(meta=(BindWidget))
-	UButton* OnlineFriendsBtn;
 
 	UFriendsViewModel* FriendViewModel;
 
@@ -56,7 +56,6 @@ protected:
 private: 
 
 	UFriendToast* FriendToastWidget;
-	int32 ArraySize;
 
 	UFUNCTION()
 	void HandleOnFriendListChange(FFriend Friend);
